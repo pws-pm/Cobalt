@@ -4,5 +4,7 @@ import pluginSass from "@cobalt-ui/plugin-sass";
 export default {
   tokens: "./tokens.json",
   outDir: "./build/sass/",
-  plugins: [pluginSass()], 
+  plugins: [
+    pluginSass()
+  ]
 };
