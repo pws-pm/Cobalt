@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to your SCSS file
-const filePath = path.join(__dirname, 'build/sass/index.scss');
+const filePath = path.join(__dirname, 'build/variables/index.scss');
 
 // Function to process the SCSS file
 function processSCSSFile(filePath) {
@@ -20,7 +20,7 @@ function processSCSSFile(filePath) {
 
         for (const line of lines) {
             // Check if the line is the start of a colorBase token block
-            if (!inColorBaseBlock && line.trim().startsWith('"colorBase')) {
+            if (!inColorBaseBlock && line.trim().startsWith('"colorbase')) {
                 inColorBaseBlock = true;
             }
 
