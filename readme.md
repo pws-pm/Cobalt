@@ -2,7 +2,13 @@
 
 ## Quick Installation
 
-1. Install the TokensBrücke plugin from Figma Community: [TokensBrücke Plugin](https://www.figma.com/community/plugin/1254538877056388290/tokensbrucke).
+1. Within the project folder install Cobalt and its plugins locally
+
+```bash
+npm i -D @cobalt-ui/cli @cobalt-ui/plugin-css @cobalt-ui/plugin-js @cobalt-ui/plugin-sass
+```
+
+2. Install the TokensBrücke plugin from Figma Community: [TokensBrücke Plugin](https://www.figma.com/community/plugin/1254538877056388290/tokensbrucke).
 
 ## Generating Tokens.json
 
