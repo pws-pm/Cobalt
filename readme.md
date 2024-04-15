@@ -20,12 +20,9 @@ Configure and save your `tokens.json` in the project folder file using these set
 
 Run the following commands in your project directory:
 
-'''bash
+\```bash
 npx co build
-'''
+node postprocess.cjs
+\```
 
 Use postprocess.cjs to adjust index.scss if needed, to remove colorBase (only if alias are already resolved)
-
-'''bash
-node postprocess.cjs
-'''
