@@ -22,10 +22,10 @@ Run the following commands in your project directory:
 
 '''bash
 npx co build
-'''bash
+'''
 
 Use postprocess.cjs to adjust index.scss if needed, to remove colorBase (only if alias are already resolved)
 
 '''bash
 node postprocess.cjs
-'''bash
+'''
