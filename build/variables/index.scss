@@ -804,14 +804,14 @@ $__token-values: (
   "Typography.body.md-semibold": (
     "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.md-semibold\")` instead.",
   ),
-  "Typography.body.s-regular": (
-    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.s-regular\")` instead.",
+  "Typography.body.sm-regular": (
+    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.sm-regular\")` instead.",
   ),
-  "Typography.body.s-regular-underline": (
-    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.s-regular-underline\")` instead.",
+  "Typography.body.sm-regular-underline": (
+    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.sm-regular-underline\")` instead.",
   ),
-  "Typography.body.s-semibold": (
-    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.s-semibold\")` instead.",
+  "Typography.body.sm-semibold": (
+    "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.sm-semibold\")` instead.",
   ),
   "Typography.body.xs-regular": (
     "__cobalt-error": "This is a typography mixin. Use `@include typography(\"Typography.body.xs-regular\")` instead.",
@@ -941,7 +941,7 @@ $__token-typography-mixins: (
       "text-decoration": (NONE),
     ),
   ),
-  "Typography.body.s-regular": (
+  "Typography.body.sm-regular": (
     ".": (
       "font-family": (Inter),
       "font-size": (14px),
@@ -952,7 +952,7 @@ $__token-typography-mixins: (
       "text-decoration": (NONE),
     ),
   ),
-  "Typography.body.s-regular-underline": (
+  "Typography.body.sm-regular-underline": (
     ".": (
       "font-family": (Inter),
       "font-size": (14px),
@@ -963,7 +963,7 @@ $__token-typography-mixins: (
       "text-decoration": (UNDERLINE),
     ),
   ),
-  "Typography.body.s-semibold": (
+  "Typography.body.sm-semibold": (
     ".": (
       "font-family": (Inter),
       "font-size": (14px),
