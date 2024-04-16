@@ -6,10 +6,16 @@ export default function pluginMAUI(options = {}) {
       let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
-      // Convert tokens to XAML content and filter out empty results
-      xamlContent += tokens.map(token => convertTokenToMAUI(token)).filter(line => line.trim().length > 0).join("\n");
+      // Group tokens by type to separate them in the output with comments
+      const groupedTokens = groupTokensByType(tokens);
 
-      xamlContent += "\n</ResourceDictionary>";
+      // Iterate over grouped tokens and append them with type comments and separations
+      for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
+        xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
+        xamlContent += tokensOfType.map(token => convertTokenToMAUI(token)).join("\n") + "\n";
+      }
+
+      xamlContent += "</ResourceDictionary>";
 
       return [
         {
@@ -19,6 +25,18 @@ export default function pluginMAUI(options = {}) {
       ];
     }
   };
+}
+
+// Helper function to group tokens by their type
+function groupTokensByType(tokens) {
+  return tokens.reduce((acc, token) => {
+    const type = token.$type;
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+    acc[type].push(token);
+    return acc;
+  }, {});
 }
 
 // Helper function to convert a token to XAML format for MAUI
@@ -33,8 +51,6 @@ function convertTokenToMAUI(token) {
       xaml = `  <sys:Double x:Key="${token.id}">${token.$value}</sys:Double>`;
       break;
     case 'shadow':
-      // Comment explaining the shadow token structure
-      xaml = `  <!-- Shadow for ${token.id} -->\n  `;
       xaml += convertShadowToMAUI(token);
       break;
     // Add more cases as necessary for other token types
