@@ -75,12 +75,15 @@ function createResourceDictionary(tokens, excludePatterns, convertFunction) {
 
   for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
       xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
-      xamlContent += tokensOfType.map(token => convertFunction(token)).join("\n") + "\n";
+      xamlContent += tokensOfType.map(token => convertFunction(token)).join(""); // Remove newline here
+      xamlContent += "\n"; // Add newline here
   }
 
-  xamlContent += "</ResourceDictionary>";
+  xamlContent += "\n</ResourceDictionary>";
   return xamlContent;
 }
+
+
 
 function createResourceDictionaryForMode(tokens, excludePatterns, mode) {
   let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -96,7 +99,7 @@ function createResourceDictionaryForMode(tokens, excludePatterns, mode) {
               ...token,
               $value: token.$extensions.mode[mode]
           };
-          xamlContent += convertTokenToMAUI(modeToken) + "\n";
+          xamlContent += convertTokenToMAUI(modeToken);
       });
 
   xamlContent += "</ResourceDictionary>";
