@@ -1,6 +1,6 @@
-import pluginCSS from "@cobalt-ui/plugin-css";
+//import pluginCSS from "@cobalt-ui/plugin-css";
 import pluginSass from "@cobalt-ui/plugin-sass";
-import pluginXAML from "./plugins/pluginXAML.js";
+import pluginMAUI from "./plugins/pluginMAUI.js";
 
 
 
@@ -10,7 +10,7 @@ export default {
   outDir: "./build/variables/",
   plugins: [
     pluginSass(),
-    pluginXAML({
+    pluginMAUI({
       filename: "theme.xaml",
     })
   ]
