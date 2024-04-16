@@ -81,23 +81,23 @@ function createResourceDictionary(tokens, excludePatterns, convertFunction) {
 
 
 function createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory) {
-  const groupedTokens = groupTokensByTypeAndMode(tokens, mode, excludePatterns);
+  const groupedTokens = groupTokensByCollectionAndMode(tokens, mode, excludePatterns);
 
-  return Object.entries(groupedTokens).map(([type, tokensOfType]) => {
+  return Object.entries(groupedTokens).map(([collectionName, tokensOfCollection]) => {
     let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
-    xamlContent += tokensOfType.map(token => convertTokenToMAUI(token)).join("");
+    xamlContent += tokensOfCollection.map(token => convertTokenToMAUI(token)).join("");
     xamlContent += "</ResourceDictionary>";
 
     return {
-      filename: `${outputDirectory}/theme.${type}.${mode}.xaml`,
+      filename: `${outputDirectory}/theme.${collectionName}.${mode}.xaml`,
       contents: xamlContent,
     };
   });
 }
 
-function groupTokensByTypeAndMode(tokens, mode, excludePatterns) {
+function groupTokensByCollectionAndMode(tokens, mode, excludePatterns) {
   return tokens
     .filter(token =>
       token.$extensions &&
@@ -106,16 +106,16 @@ function groupTokensByTypeAndMode(tokens, mode, excludePatterns) {
       !excludePatterns.some(pattern => new RegExp(pattern).test(token.id))
     )
     .reduce((acc, token) => {
-      const type = token.$type;
+      const collectionName = token.$extensions.figma.collection.name;
       const modeToken = {
         ...token,
         $value: token.$extensions.mode[mode],
       };
 
-      if (!acc[type]) {
-        acc[type] = [];
+      if (!acc[collectionName]) {
+        acc[collectionName] = [];
       }
-      acc[type].push(modeToken);
+      acc[collectionName].push(modeToken);
       return acc;
     }, {});
 }
