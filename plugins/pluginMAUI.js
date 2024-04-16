@@ -66,14 +66,16 @@ function detectAllModes(tokens) {
 
 function createResourceDictionary(tokens, excludePatterns, convertFunction) {
   let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
-  const filteredTokens = tokens.filter(token => !excludePatterns.some(pattern => new RegExp(pattern).test(token.id)));
+  const filteredTokens = tokens.filter(token => 
+      !excludePatterns.some(pattern => new RegExp(pattern).test(token.id)));
+
   const groupedTokens = groupTokensByType(filteredTokens);
 
   for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
-    xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
-    xamlContent += tokensOfType.map(token => convertFunction(token)).join("\n") + "\n";
+      xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
+      xamlContent += tokensOfType.map(token => convertFunction(token)).join("\n") + "\n";
   }
 
   xamlContent += "</ResourceDictionary>";
@@ -84,7 +86,6 @@ function createResourceDictionaryForMode(tokens, excludePatterns, mode) {
   let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
-  // Filter tokens for the specific mode and exclude patterns
   tokens.filter(token => 
       token.$extensions && 
       token.$extensions.mode && 
@@ -95,32 +96,34 @@ function createResourceDictionaryForMode(tokens, excludePatterns, mode) {
               ...token,
               $value: token.$extensions.mode[mode]
           };
-          xamlContent += convertTokenToMAUI(modeToken);
+          xamlContent += convertTokenToMAUI(modeToken) + "\n";
       });
 
-  xamlContent += "\n</ResourceDictionary>";
+  xamlContent += "</ResourceDictionary>";
   return xamlContent;
 }
+
+
 
 
 function convertTokenToMAUI(token, mode = null) {
   let xaml = '';
   let value = mode && token.$extensions && token.$extensions.mode && token.$extensions.mode[mode]
               ? token.$extensions.mode[mode]
-              : token.$value;
+              : token.$value; // Use the default $value if no mode-specific value is provided
 
   switch (token.$type) {
       case 'color':
-          xaml = `  <Color x:Key="${token.id}">${value}</Color>\n`; // Ensure newline at the end
+          xaml = `  <Color x:Key="${token.id}">${value}</Color>\n`;
           break;
       case 'dimension':
           xaml = `  <sys:Double x:Key="${token.id}">${parseDimension(value)}</sys:Double>\n`;
           break;
       case 'shadow':
-          xaml = convertShadowToMAUI(token, value) + '\n'; // Newline after shadows
+          xaml = convertShadowToMAUI(token, value) + '\n';
           break;
       case 'typography':
-          xaml = convertTypographyToXAML(token, value) + '\n'; // Newline after typography styles
+          xaml = convertTypographyToXAML(token, value) + '\n';
           break;
   }
 
