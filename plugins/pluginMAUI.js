@@ -27,7 +27,6 @@ export default function pluginMAUI(options = {}) {
   };
 }
 
-// Helper function to group tokens by their type
 function groupTokensByType(tokens) {
   return tokens.reduce((acc, token) => {
     const type = token.$type;
@@ -39,7 +38,6 @@ function groupTokensByType(tokens) {
   }, {});
 }
 
-// Helper function to convert a token to XAML format for MAUI
 function convertTokenToMAUI(token) {
   let xaml = '';
 
@@ -53,17 +51,14 @@ function convertTokenToMAUI(token) {
     case 'shadow':
       xaml += convertShadowToMAUI(token);
       break;
-    // Add more cases as necessary for other token types
+    case 'typography':
+      xaml += convertTypographyToXAML(token);
+      break;
   }
 
   return xaml;
 }
 
-/**
- * Converts shadow effects for MAUI.
- * Generates shadow entries with or without indices based on count.
- * Single shadow does not use index; multiple shadows are indexed.
- */
 function convertShadowToMAUI(token) {
   const shadowCount = token.$value.length;
   return token.$value.map((shadow, index) => {
@@ -72,7 +67,33 @@ function convertShadowToMAUI(token) {
   }).join("\n  ");
 }
 
-// Helper function to parse dimensions and remove 'px' if present
+function convertTypographyToXAML(token) {
+  const { fontFamily, fontWeight, fontSize, lineHeight, letterSpacing, textDecoration, textCase } = token.$value;
+  return `
+  <Style x:Key="${token.id}" TargetType="Label">
+    <Setter Property="FontFamily" Value="${fontFamily}" />
+    <Setter Property="FontSize" Value="${parseDimension(fontSize)}" />
+    <Setter Property="FontWeight" Value="${fontWeight}" />
+    <Setter Property="LineHeight" Value="${parseDimension(lineHeight)}" />
+    <Setter Property="CharacterSpacing" Value="${parseLetterSpacing(letterSpacing)}" />
+    <Setter Property="TextDecorations" Value="${textDecoration === 'NONE' ? 'None' : textDecoration}" />
+    <Setter Property="TextTransform" Value="${convertTextCase(textCase)}" />
+  </Style>`;
+}
+
 function parseDimension(value) {
   return value.replace('px', '');
+}
+
+function parseLetterSpacing(value) {
+  return value.endsWith('%') ? parseFloat(value) * 10 : value;
+}
+
+function convertTextCase(textCase) {
+  switch(textCase) {
+    case 'UPPERCASE': return 'Upper';
+    case 'LOWERCASE': return 'Lower';
+    case 'CAPITALIZE': return 'Capitalize';
+    default: return 'None';
+  }
 }
