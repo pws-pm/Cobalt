@@ -30,25 +30,20 @@ export default function pluginMAUI(options = {}) {
     name: "pluginMAUI",
 
     async build({ tokens, rawSchema }) {
-      // Detect all unique modes from the tokens
+      const { excludePatterns = [], outputDirectory = "./" } = options;
       const allModes = detectAllModes(tokens);
-
-      // Generate the main XAML content
+    
       let baseContent = createResourceDictionary(tokens, excludePatterns, convertTokenToMAUI);
       const outputs = [{
-        filename: `${outputDirectory}theme.xaml`,
+        filename: `${outputDirectory}/theme.xaml`,
         contents: baseContent,
       }];
-
-      // Generate additional files for each detected mode
+    
       allModes.forEach(mode => {
-        const modeContent = createResourceDictionaryForMode(tokens, excludePatterns, mode);
-        outputs.push({
-          filename: `${outputDirectory}theme.${mode}.xaml`,
-          contents: modeContent,
-        });
+        const modeOutputs = createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory);
+        outputs.push(...modeOutputs);
       });
-
+    
       return outputs;
     }
   };
@@ -85,28 +80,45 @@ function createResourceDictionary(tokens, excludePatterns, convertFunction) {
 
 
 
-function createResourceDictionaryForMode(tokens, excludePatterns, mode) {
-  let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
+function createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory) {
+  const groupedTokens = groupTokensByTypeAndMode(tokens, mode, excludePatterns);
 
-  tokens.filter(token => 
-      token.$extensions && 
-      token.$extensions.mode && 
-      token.$extensions.mode[mode] &&
-      !excludePatterns.some(pattern => new RegExp(pattern).test(token.id))) // Apply the exclude patterns
-      .forEach(token => {
-          const modeToken = {
-              ...token,
-              $value: token.$extensions.mode[mode]
-          };
-          xamlContent += convertTokenToMAUI(modeToken);
-      });
+  return Object.entries(groupedTokens).map(([type, tokensOfType]) => {
+    let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
-  xamlContent += "</ResourceDictionary>";
-  return xamlContent;
+    xamlContent += tokensOfType.map(token => convertTokenToMAUI(token)).join("");
+    xamlContent += "</ResourceDictionary>";
+
+    return {
+      filename: `${outputDirectory}/theme.${type}.${mode}.xaml`,
+      contents: xamlContent,
+    };
+  });
 }
 
+function groupTokensByTypeAndMode(tokens, mode, excludePatterns) {
+  return tokens
+    .filter(token =>
+      token.$extensions &&
+      token.$extensions.mode &&
+      token.$extensions.mode[mode] &&
+      !excludePatterns.some(pattern => new RegExp(pattern).test(token.id))
+    )
+    .reduce((acc, token) => {
+      const type = token.$type;
+      const modeToken = {
+        ...token,
+        $value: token.$extensions.mode[mode],
+      };
 
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(modeToken);
+      return acc;
+    }, {});
+}
 
 
 function convertTokenToMAUI(token, mode = null) {
