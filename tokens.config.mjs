@@ -1,6 +1,6 @@
 import pluginCSS from "@cobalt-ui/plugin-css";
 import pluginSass from "@cobalt-ui/plugin-sass";
-//import xamlPlugin from './plugins/xamlPlugin.js';
+import pluginXAML from "./plugins/pluginXAML.js";
 
 
 
@@ -9,7 +9,9 @@ export default {
   tokens: "./tokens.json",
   outDir: "./build/variables/",
   plugins: [
-    pluginSass()
-    //xamlPlugin({ defaultFilename: 'resources.xaml' })
+    pluginSass(),
+    pluginXAML({
+      filename: "theme.xaml",
+    })
   ]
 };
