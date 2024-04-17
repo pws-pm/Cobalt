@@ -16,7 +16,6 @@
  * export default {
  *   plugins: [
  *     pluginMAUI({
- *       filename: "theme.xaml", // Specify the output filename
  *       excludePatterns: ["^colorbase", "temporary$"]
  *     }),
  *   ],
