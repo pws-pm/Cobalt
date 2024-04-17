@@ -11,7 +11,7 @@ export default {
   plugins: [
     pluginSass(),
     pluginMAUI({
-      filename: "variables.xaml",
+      filename: "theme.xaml",
       excludePatterns: ["^colorbase"]
     })
   ]
