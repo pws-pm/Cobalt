@@ -34,7 +34,7 @@ export default function pluginMAUI(options = {}) {
     
       let baseContent = createResourceDictionary(tokens, excludePatterns, convertTokenToMAUI);
       const outputs = [{
-        filename: `${outputDirectory}/theme.xaml`,
+        filename: `${outputDirectory}/theme.xaml`, //adjust filename as needed
         contents: baseContent,
       }];
     
