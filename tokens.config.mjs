@@ -1,4 +1,3 @@
-//import pluginCSS from "@cobalt-ui/plugin-css";
 import pluginSass from "@cobalt-ui/plugin-sass";
 import pluginMAUI from "./plugins/pluginMAUI.js";
 
@@ -11,6 +10,7 @@ export default {
   plugins: [
     pluginSass(),
     pluginMAUI({
+      outputDirectory: "/xaml",
       excludePatterns: ["^colorbase"]
     })
   ]

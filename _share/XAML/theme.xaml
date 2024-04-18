@@ -77,25 +77,25 @@
 
   <!-- SHADOW Tokens -->
   <Shadow x:Key="Effects.shadow-100-1" Color="#0000000a" Radius="4" Opacity="1" OffsetX="0" OffsetY="1"/>
-    <Shadow x:Key="Effects.shadow-100-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
+  <Shadow x:Key="Effects.shadow-100-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
 
   <Shadow x:Key="Effects.shadow-200-1" Color="#0000000d" Radius="8" Opacity="1" OffsetX="0" OffsetY="3"/>
-    <Shadow x:Key="Effects.shadow-200-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
+  <Shadow x:Key="Effects.shadow-200-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
 
   <Shadow x:Key="Effects.shadow-300-1" Color="#0000001a" Radius="12" Opacity="1" OffsetX="0" OffsetY="4"/>
-    <Shadow x:Key="Effects.shadow-300-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
+  <Shadow x:Key="Effects.shadow-300-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
 
   <Shadow x:Key="Effects.shadow-400-1" Color="#0000001a" Radius="16" Opacity="1" OffsetX="0" OffsetY="8"/>
-    <Shadow x:Key="Effects.shadow-400-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
+  <Shadow x:Key="Effects.shadow-400-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
 
   <Shadow x:Key="Effects.shadow-500-1" Color="#0000001f" Radius="24" Opacity="1" OffsetX="0" OffsetY="12"/>
-    <Shadow x:Key="Effects.shadow-500-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
+  <Shadow x:Key="Effects.shadow-500-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
 
   <Shadow x:Key="Effects.shadow-600-1" Color="#00000026" Radius="24" Opacity="1" OffsetX="0" OffsetY="20"/>
-    <Shadow x:Key="Effects.shadow-600-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
+  <Shadow x:Key="Effects.shadow-600-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="0" OffsetY="-1"/>
 
   <Shadow x:Key="Effects.shadow-inset-1" Color="#00000012" Radius="2" Opacity="1" OffsetX="0" OffsetY="1"/>
-    <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
+  <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
 
 
 

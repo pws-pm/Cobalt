@@ -12,7 +12,7 @@ npm i -D @cobalt-ui/cli @cobalt-ui/plugin-css @cobalt-ui/plugin-js @cobalt-ui/pl
 
 ## Generating Tokens.json
 
-Configure and save your `tokens.json` in the project folder file using these settings:
+Configure and save your `design.tokens.json` in the ./_input folder file using these settings:
 - **Color Mode:** `hex`
 - **Typography:** `yes`
 - **Grids:** `no`

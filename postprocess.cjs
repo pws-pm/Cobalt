@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to your SCSS file
-const filePath = path.join(__dirname, 'build/variables/index.scss');
+const filePath = path.join(__dirname, '_output/index.scss');
 
 // Function to process the SCSS file
 function processSCSSFile(filePath) {

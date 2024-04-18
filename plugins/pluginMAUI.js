@@ -69,8 +69,8 @@ function createResourceDictionary(tokens, excludePatterns, convertFunction) {
 
   for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
       xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
-      xamlContent += tokensOfType.map(token => convertFunction(token)).join(""); // Remove newline here
-      xamlContent += "\n"; // Add newline here
+      xamlContent += tokensOfType.map(token => convertFunction(token)).join("");
+      xamlContent += "\n";
   }
 
   xamlContent += "\n</ResourceDictionary>";
@@ -149,7 +149,7 @@ function convertShadowToMAUI(token, value) {
   return value.map((shadow, index) => {
       const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
       return `  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`;
-  }).join("\n  ") + "\n"; // Join shadows with new lines and add a newline at the end
+  }).join("\n") + "\n";
 }
 
 function groupTokensByType(tokens) {
