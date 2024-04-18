@@ -1,18 +1,13 @@
 /**
- * pluginMAUI Configuration Options
- * 
- * This plugin generates a XAML ResourceDictionary from design tokens. It supports an optional
- * 'excludePatterns' parameter to exclude tokens based on their IDs. 
+ * pluginMAUI - A Cobalt UI plugin to generate XAML ResourceDictionary from design tokens.
+ * It supports filtering tokens based on exclusion patterns defined by regular expressions.
  *
  * Usage:
- * The 'excludePatterns' parameter accepts an array of string patterns. Each string is a regular 
- * expression that is tested against the token IDs. Any token whose ID matches any of the provided 
- * patterns will be excluded from the output.
+ * - excludePatterns: Optional, Array of string patterns used to exclude tokens based on their IDs.
+ * - outputDirectory: Optional, specifies the directory for saving the generated output files.
  *
- * Example Configuration to exclude tokens that start with 'colorbase' or end with 'temporary':
- *
+ * Example:
  * import pluginMAUI from "./plugins/pluginMAUI.js";
- *
  * export default {
  *   plugins: [
  *     pluginMAUI({
@@ -22,31 +17,46 @@
  * };
  */
 
+import path from 'path';
+
 export default function pluginMAUI(options = {}) {
-  const { excludePatterns = [], outputDirectory = "./" } = options;
+  const { excludePatterns = [], outputDirectory = "" } = options;
 
   return {
     name: "pluginMAUI",
+    async build({ tokens, rawSchema, outDir }) {
+      if (!Array.isArray(tokens)) {
+        throw new Error("Invalid tokens array provided to pluginMAUI");
+      }
 
-    async build({ tokens, rawSchema }) {
-      const { excludePatterns = [], outputDirectory = "./" } = options;
+      // Resolve the full path combining the main outDir with the plugin-specific outputDirectory
+      // Ensuring it handles both relative and absolute plugin-specific directories correctly
+      const resolvedOutputDirectory = outputDirectory.startsWith('/') ?
+                                      outputDirectory.substring(1) : outputDirectory;
+      const fullOutputPath = path.join(outDir, resolvedOutputDirectory); // Use path.join to correctly handle paths
+
       const allModes = detectAllModes(tokens);
-    
       let baseContent = createResourceDictionary(tokens, excludePatterns, convertTokenToMAUI);
+
+      // Initial output setup for base theme file
       const outputs = [{
-        filename: `${outputDirectory}/theme.xaml`, //adjust filename as needed
+        filename: `${fullOutputPath}/theme.xaml`,
         contents: baseContent,
       }];
-    
+
+      // Processing mode-specific themes
       allModes.forEach(mode => {
-        const modeOutputs = createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory);
+        const modeOutputs = createResourceDictionaryForMode(tokens, excludePatterns, mode, fullOutputPath);
         outputs.push(...modeOutputs);
       });
-    
+
       return outputs;
     }
   };
 }
+
+
+
 
 function detectAllModes(tokens) {
   const modeSet = new Set();
@@ -59,26 +69,27 @@ function detectAllModes(tokens) {
 }
 
 function createResourceDictionary(tokens, excludePatterns, convertFunction) {
+  // Initial XAML content with namespace declarations
   let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
+  // Filtering tokens based on exclude patterns
   const filteredTokens = tokens.filter(token => 
       !excludePatterns.some(pattern => new RegExp(pattern).test(token.id)));
 
+  // Grouping tokens by type and generating XAML entries
   const groupedTokens = groupTokensByType(filteredTokens);
-
   for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
-      xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
-      xamlContent += tokensOfType.map(token => convertFunction(token)).join("");
-      xamlContent += "\n";
+    xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
+    xamlContent += tokensOfType.map(token => convertFunction(token)).join("");
+    xamlContent += "\n";
   }
 
   xamlContent += "\n</ResourceDictionary>";
   return xamlContent;
 }
 
-
-
+// Function to handle mode-specific resource dictionaries
 function createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory) {
   const groupedTokens = groupTokensByCollectionAndMode(tokens, mode, excludePatterns);
 
@@ -95,6 +106,7 @@ function createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDi
     };
   });
 }
+
 
 function groupTokensByCollectionAndMode(tokens, mode, excludePatterns) {
   return tokens
