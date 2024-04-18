@@ -24,26 +24,46 @@
 
 export default function pluginMAUI(options = {}) {
   const { excludePatterns = [], outputDirectory = "./" } = options;
+  
+  // Validate options structure
+  if (!Array.isArray(excludePatterns) || typeof outputDirectory !== 'string') {
+    throw new Error("Invalid options: 'excludePatterns' must be an array and 'outputDirectory' must be a string.");
+  }
 
   return {
     name: "pluginMAUI",
 
     async build({ tokens, rawSchema }) {
-      const { excludePatterns = [], outputDirectory = "./" } = options;
-      const allModes = detectAllModes(tokens);
-    
-      let baseContent = createResourceDictionary(tokens, excludePatterns, convertTokenToMAUI);
-      const outputs = [{
-        filename: `${outputDirectory}/theme.xaml`, //adjust filename as needed
-        contents: baseContent,
-      }];
-    
-      allModes.forEach(mode => {
-        const modeOutputs = createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory);
-        outputs.push(...modeOutputs);
-      });
-    
-      return outputs;
+      // Validate tokens array
+      if (!Array.isArray(tokens)) {
+        throw new Error("Invalid input: 'tokens' must be an array.");
+      }
+
+      try {
+        const allModes = detectAllModes(tokens);
+        const regexPatterns = excludePatterns.map(pattern => {
+          try {
+            return new RegExp(pattern);
+          } catch (error) {
+            throw new Error(`Invalid regex pattern: ${pattern}`);
+          }
+        });
+        let baseContent = createResourceDictionary(tokens, regexPatterns, convertTokenToMAUI);
+        const outputs = [{
+          filename: `${outputDirectory}/theme.xaml`,
+          contents: baseContent,
+        }];
+
+        allModes.forEach(mode => {
+          const modeOutputs = createResourceDictionaryForMode(tokens, regexPatterns, mode, outputDirectory);
+          outputs.push(...modeOutputs);
+        });
+
+        return outputs;
+      } catch (error) {
+        console.error("Error in build process:", error);
+        throw new Error("Failed to build themes due to an internal error.");
+      }
     }
   };
 }
@@ -58,51 +78,53 @@ function detectAllModes(tokens) {
   return Array.from(modeSet);
 }
 
-function createResourceDictionary(tokens, excludePatterns, convertFunction) {
+function createResourceDictionary(tokens, regexPatterns, convertFunction) {
   let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
   const filteredTokens = tokens.filter(token => 
-      !excludePatterns.some(pattern => new RegExp(pattern).test(token.id)));
+      !regexPatterns.some(regex => regex.test(token.id)));
 
   const groupedTokens = groupTokensByType(filteredTokens);
-
   for (const [type, tokensOfType] of Object.entries(groupedTokens)) {
-      xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
-      xamlContent += tokensOfType.map(token => convertFunction(token)).join(""); // Remove newline here
-      xamlContent += "\n"; // Add newline here
+    xamlContent += `\n  <!-- ${type.toUpperCase()} Tokens -->\n`;
+    xamlContent += tokensOfType.map(token => convertFunction(token)).join("");
+    xamlContent += "\n";
   }
 
   xamlContent += "\n</ResourceDictionary>";
   return xamlContent;
 }
 
+function createResourceDictionaryForMode(tokens, regexPatterns, mode, outputDirectory) {
+  try {
+    const groupedTokens = groupTokensByCollectionAndMode(tokens, mode, regexPatterns);
+    
+    return Object.entries(groupedTokens).map(([collectionName, tokensOfCollection]) => {
+      let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
 
+      xamlContent += tokensOfCollection.map(token => convertTokenToMAUI(token)).join("");
+      xamlContent += "</ResourceDictionary>";
 
-function createResourceDictionaryForMode(tokens, excludePatterns, mode, outputDirectory) {
-  const groupedTokens = groupTokensByCollectionAndMode(tokens, mode, excludePatterns);
-
-  return Object.entries(groupedTokens).map(([collectionName, tokensOfCollection]) => {
-    let xamlContent = `<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">\n`;
-
-    xamlContent += tokensOfCollection.map(token => convertTokenToMAUI(token)).join("");
-    xamlContent += "</ResourceDictionary>";
-
-    return {
-      filename: `${outputDirectory}/theme.${collectionName}.${mode}.xaml`,
-      contents: xamlContent,
-    };
-  });
+      return {
+        filename: `${outputDirectory}/theme.${collectionName}.${mode}.xaml`,
+        contents: xamlContent,
+      };
+    });
+  } catch (error) {
+    console.error(`Error processing mode ${mode}:`, error);
+    throw new Error(`Failed to create resource dictionary for mode ${mode} due to an internal error.`);
+  }
 }
 
-function groupTokensByCollectionAndMode(tokens, mode, excludePatterns) {
+function groupTokensByCollectionAndMode(tokens, mode, regexPatterns) {
   return tokens
     .filter(token =>
       token.$extensions &&
       token.$extensions.mode &&
       token.$extensions.mode[mode] &&
-      !excludePatterns.some(pattern => new RegExp(pattern).test(token.id))
+      !regexPatterns.some(regex => regex.test(token.id))
     )
     .reduce((acc, token) => {
       const collectionName = token.$extensions.figma.collection.name;
@@ -149,7 +171,7 @@ function convertShadowToMAUI(token, value) {
   return value.map((shadow, index) => {
       const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
       return `  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`;
-  }).join("\n  ") + "\n"; // Join shadows with new lines and add a newline at the end
+  }).join("\n") + "\n";
 }
 
 function groupTokensByType(tokens) {
