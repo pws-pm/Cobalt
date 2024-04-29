@@ -188,9 +188,20 @@ function groupTokensByType(tokens) {
 }
 
 function convertFontWeight(weight) {
-  // If weight is already a string, return it directly
+  // List of valid font weight names supported by MAUI
+  const validFontWeights = ["Thin", "ExtraLight", "Light", "Regular", "Medium", "SemiBold", "Bold", "ExtraBold", "Black"];
+
   if (typeof weight === 'string') {
-      return weight;
+      // Normalize the input string
+      let normalizedWeight = weight.replace(/\s/g, '').charAt(0).toUpperCase() + weight.replace(/\s/g, '').slice(1).toLowerCase();
+
+      // Check if the normalized font weight is valid
+      if (validFontWeights.includes(normalizedWeight)) {
+          return normalizedWeight;
+      } else {
+          console.log(`Unsupported fontWeight '${weight}', defaulting to 'Regular'.`);
+          return "Regular";
+      }
   }
 
   // Map numeric fontWeight values to MAUI named equivalents
@@ -209,6 +220,7 @@ function convertFontWeight(weight) {
           return "Regular";  // Default or fallback to regular if unknown
   }
 }
+
 
 function convertTypographyToXAML(token, value) {
   const fontSizePx = parseFloat(value.fontSize.replace('px', '')); // Extract numeric part from fontSize
