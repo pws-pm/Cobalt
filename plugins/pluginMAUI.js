@@ -170,11 +170,26 @@ function convertTokenToMAUI(token, mode = null) {
 
 function convertShadowToMAUI(token, value) {
   const shadowCount = value.length;
-  return value.map((shadow, index) => {
-      const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
-      return `  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`;
-  }).join("\n") + "\n";
+  let xamlOutput = [];
+
+  value.forEach((shadow, index) => {
+    const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
+    const margin = parseFloat(shadow.spread.replace('px', ''));
+
+    xamlOutput.push(`  <!-- ${shadow.inset ? "Inset shadow, apply using a clipped border." : "Drop shadow, apply using a Frame."} -->`);
+    if (index === 0) { // Add this comment only before the first item
+      xamlOutput.push(`  <!-- Tokens ending with a progressive index should always be used together -->`);
+    }
+    xamlOutput.push(`  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`);
+    if (!shadow.inset) {
+      xamlOutput.push(`  <!-- Apply this shadow to a Frame around the main component -->`);
+      xamlOutput.push(`  <!-- Frame should have a Margin="${margin},${margin},${margin},${margin}" relative to the main component -->`);
+    }
+  });
+
+  return xamlOutput.join("\n") + "\n";
 }
+
 
 function groupTokensByType(tokens) {
   return tokens.reduce((acc, token) => {
