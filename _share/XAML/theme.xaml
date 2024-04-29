@@ -74,7 +74,10 @@
   <Color x:Key="color.semantic.fds-c-warning-texticon-onneutral">#f3be62</Color>
   <Color x:Key="color.semantic.fds-c-warning-texticon-onwarning">#111111</Color>
 
+
   <!-- SHADOW Tokens -->
+  <!-- Shadow helper frames or borders should always have the same corner radius of the main componet -->
+
   <Shadow x:Key="Effects.shadow-inset-1" Color="#00000012" Radius="2" Opacity="1" OffsetX="0" OffsetY="1"/>
   <!-- This shadow token (Effects.shadow-inset-1) should be applied to an outside border around the main component visually clipped to generate a shadow inset effect -->
   <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
