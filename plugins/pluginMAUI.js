@@ -172,18 +172,21 @@ function convertShadowToMAUI(token, value) {
   const shadowCount = value.length;
   let xamlOutput = [];
 
+  // Initial comment for the group, applicable generally, without specifying shadow type.
+  xamlOutput.push(`<!-- Shadows for ${token.id}. All tokens in this group should be used together. -->`);
+
   value.forEach((shadow, index) => {
     const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
     const margin = parseFloat(shadow.spread.replace('px', ''));
 
-    xamlOutput.push(`  <!-- ${shadow.inset ? "Inset shadow, apply using a clipped border." : "Drop shadow, apply using a Frame."} -->`);
-    if (index === 0) { // Add this comment only before the first item
-      xamlOutput.push(`  <!-- Tokens ending with a progressive index should always be used together -->`);
-    }
-    xamlOutput.push(`  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`);
-    if (!shadow.inset) {
-      xamlOutput.push(`  <!-- Apply this shadow to a Frame around the main component -->`);
-      xamlOutput.push(`  <!-- Frame should have a Margin="${margin},${margin},${margin},${margin}" relative to the main component -->`);
+    // Determine the specific application method and Z-index based on shadow type (inset or drop)
+    if (shadow.inset) {
+      xamlOutput.push(`  <!-- Inset shadow (Key: ${key}), apply using a clipped border. Ensure the Z-index is set higher so the shadow is visible within the component content. -->`);
+      xamlOutput.push(`  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`);
+    } else {
+      xamlOutput.push(`  <!-- Drop shadow (Key: ${key}), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->`);
+      xamlOutput.push(`  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`);
+      xamlOutput.push(`  <!-- Frame for drop shadow (Key: ${key}) should have a Margin="${margin},${margin},${margin},${margin}" relative to the main component. -->`);
     }
   });
 

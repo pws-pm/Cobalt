@@ -76,70 +76,58 @@
 
 
   <!-- SHADOW Tokens -->
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-100. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-100-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-100-1" Color="#0000000a" Radius="4" Opacity="1" OffsetX="16" OffsetY="1"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="0,0,0,0" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-100-1) should have a Margin="0,0,0,0" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-100-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-100-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="16" OffsetY="-0.5"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.25,-0.25,-0.25,-0.25" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-100-2) should have a Margin="-0.25,-0.25,-0.25,-0.25" relative to the main component. -->
 
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-200. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-200-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-200-1" Color="#0000000d" Radius="8" Opacity="1" OffsetX="16" OffsetY="3"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-2,-2,-2,-2" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-200-1) should have a Margin="-2,-2,-2,-2" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-200-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-200-2" Color="#ffffff33" Radius="0.25" Opacity="1" OffsetX="16" OffsetY="-0.5"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.25,-0.25,-0.25,-0.25" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-200-2) should have a Margin="-0.25,-0.25,-0.25,-0.25" relative to the main component. -->
 
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-300. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-300-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-300-1" Color="#0000001a" Radius="12" Opacity="1" OffsetX="16" OffsetY="4"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-4,-4,-4,-4" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-300-1) should have a Margin="-4,-4,-4,-4" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-300-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-300-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="16" OffsetY="-1"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-300-2) should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component. -->
 
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-400. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-400-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-400-1" Color="#0000001a" Radius="16" Opacity="1" OffsetX="16" OffsetY="8"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-6,-6,-6,-6" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-400-1) should have a Margin="-6,-6,-6,-6" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-400-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-400-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="16" OffsetY="-1"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-400-2) should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component. -->
 
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-500. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-500-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-500-1" Color="#0000001f" Radius="24" Opacity="1" OffsetX="16" OffsetY="12"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-8,-8,-8,-8" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-500-1) should have a Margin="-8,-8,-8,-8" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-500-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-500-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="16" OffsetY="-1"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-500-2) should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component. -->
 
-  <!-- Drop shadow, apply using a Frame. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-600. All tokens in this group should be used together. -->
+  <!-- Drop shadow (Key: Effects.shadow-600-1), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-600-1" Color="#00000026" Radius="24" Opacity="1" OffsetX="16" OffsetY="20"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-10,-10,-10,-10" relative to the main component -->
-  <!-- Drop shadow, apply using a Frame. -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-600-1) should have a Margin="-10,-10,-10,-10" relative to the main component. -->
+  <!-- Drop shadow (Key: Effects.shadow-600-2), apply using a Frame behind the main component. Ensure the Z-index is set lower so the shadow appears behind the component content. -->
   <Shadow x:Key="Effects.shadow-600-2" Color="#ffffff33" Radius="0.5" Opacity="1" OffsetX="16" OffsetY="-1"/>
-  <!-- Apply this shadow to a Frame around the main component -->
-  <!-- Frame should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component -->
+  <!-- Frame for drop shadow (Key: Effects.shadow-600-2) should have a Margin="-0.5,-0.5,-0.5,-0.5" relative to the main component. -->
 
-  <!-- Inset shadow, apply using a clipped border. -->
-  <!-- Tokens ending with a progressive index should always be used together -->
+<!-- Shadows for Effects.shadow-inset. All tokens in this group should be used together. -->
+  <!-- Inset shadow (Key: Effects.shadow-inset-1), apply using a clipped border. Ensure the Z-index is set higher so the shadow is visible within the component content. -->
   <Shadow x:Key="Effects.shadow-inset-1" Color="#00000012" Radius="2" Opacity="1" OffsetX="16" OffsetY="1"/>
-  <!-- Inset shadow, apply using a clipped border. -->
+  <!-- Inset shadow (Key: Effects.shadow-inset-2), apply using a clipped border. Ensure the Z-index is set higher so the shadow is visible within the component content. -->
   <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="16" OffsetY="-0.5"/>
 
 
