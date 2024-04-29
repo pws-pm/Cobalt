@@ -1,4 +1,6 @@
 /**
+ * Version 1.01
+ * 
  * pluginMAUI Configuration Options
  * 
  * This plugin generates a XAML ResourceDictionary from design tokens. It supports an optional
@@ -185,33 +187,80 @@ function groupTokensByType(tokens) {
   }, {});
 }
 
+function convertFontWeight(weight) {
+  // If weight is already a string, return it directly
+  if (typeof weight === 'string') {
+      return weight;
+  }
+
+  // Map numeric fontWeight values to MAUI named equivalents
+  switch (weight) {
+      case 100: return "Thin";
+      case 200: return "ExtraLight";
+      case 300: return "Light";
+      case 400: return "Regular";
+      case 500: return "Medium";
+      case 600: return "SemiBold";
+      case 700: return "Bold";
+      case 800: return "ExtraBold";
+      case 900: return "Black";
+      default:
+          console.log(`Unexpected fontWeight value '${weight}', defaulting to 'Regular'.`);
+          return "Regular";  // Default or fallback to regular if unknown
+  }
+}
 
 function convertTypographyToXAML(token, value) {
+  const fontSizePx = parseFloat(value.fontSize.replace('px', '')); // Extract numeric part from fontSize
+
   return `
 <Style x:Key="${token.id}" TargetType="Label">
-  <Setter Property="FontFamily" Value="${value.fontFamily}" />
-  <Setter Property="FontSize" Value="${parseDimension(value.fontSize)}" />
-  <Setter Property="FontWeight" Value="${value.fontWeight}" />
-  <Setter Property="LineHeight" Value="${parseDimension(value.lineHeight)}" />
-  <Setter Property="CharacterSpacing" Value="${parseLetterSpacing(value.letterSpacing)}" />
-  <Setter Property="TextDecorations" Value="${value.textDecoration === 'NONE' ? 'None' : value.textDecoration}" />
-  <Setter Property="TextTransform" Value="${convertTextCase(value.textCase)}" />
+<Setter Property="FontFamily" Value="${value.fontFamily}" />
+<Setter Property="FontSize" Value="${parseDimension(value.fontSize)}" />
+<Setter Property="FontWeight" Value="${convertFontWeight(value.fontWeight)}" />
+<Setter Property="LineHeight" Value="${parseDimension(value.lineHeight)}" />
+<Setter Property="CharacterSpacing" Value="${parseLetterSpacing(value.letterSpacing, fontSizePx)}" />
+<Setter Property="TextDecorations" Value="${value.textDecoration === 'NONE' ? 'None' : value.textDecoration}" />
+<Setter Property="TextTransform" Value="${convertTextCase(value.textCase)}" />
 </Style>\n`;
 }
 
+
 function parseDimension(value) {
+  if (typeof value !== 'string' || !value.endsWith('px')) {
+      console.error(`Invalid dimension value: ${value}. Expected a string ending with 'px'.`);
+      return '16'; // Default to '16' if input is not as expected
+  }
   return value.replace('px', '');
 }
 
-function parseLetterSpacing(value) {
-  return value.endsWith('%') ? parseFloat(value) * 10 : value;
+
+function parseLetterSpacing(letterSpacing, fontSize) {
+  if (typeof letterSpacing === 'string') {
+      if (letterSpacing.endsWith('%')) {
+          // Convert from percentage of the font size to em
+          const percentage = parseFloat(letterSpacing) / 100;
+          const letterSpacingEm = (percentage * fontSize);
+          return Math.round(letterSpacingEm / fontSize * 1000); // Convert to MAUI's unit
+      } else if (letterSpacing.endsWith('px')) {
+          // Direct conversion from pixels to em
+          const letterSpacingPx = parseFloat(letterSpacing);
+          return Math.round(letterSpacingPx / fontSize * 1000); // Convert to MAUI's unit
+      }
+  }
+  console.error(`Invalid letterSpacing value: ${letterSpacing}. Expected a string with 'px' or '%'.`);
+  return 0; // Default value if parsing fails
 }
 
+
+
 function convertTextCase(textCase) {
-  switch(textCase) {
-    case 'UPPERCASE': return 'Upper';
-    case 'LOWERCASE': return 'Lower';
-    case 'CAPITALIZE': return 'Capitalize';
-    default: return 'None';
+  switch(textCase.toUpperCase()) { // Ensure the case is not sensitive
+      case 'UPPERCASE': return 'Upper';
+      case 'LOWERCASE': return 'Lower';
+      case 'CAPITALIZE': return 'Capitalize';
+      default:
+          console.log(`Unexpected text case value '${textCase}', defaulting to 'None'.`);
+          return 'None'; // Default if no known case is matched
   }
 }

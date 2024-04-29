@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <sys:Double x:Key="spacing.fds-s-2xl">32</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-2xs">4</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-3xl">48</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-3xs">2</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-4xl">64</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-fixed2">2</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-lg">20</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-md">16</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-none">16</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-sm">12</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-xl">24</sys:Double>
+  <sys:Double x:Key="spacing.fds-s-xs">8</sys:Double>
+</ResourceDictionary>

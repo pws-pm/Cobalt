@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <sys:Double x:Key="radius.fds-r-2xl">16</sys:Double>
+  <sys:Double x:Key="radius.fds-r-3xl">24</sys:Double>
+  <sys:Double x:Key="radius.fds-r-3xl2more">26</sys:Double>
+  <sys:Double x:Key="radius.fds-r-lg">8</sys:Double>
+  <sys:Double x:Key="radius.fds-r-max">1000</sys:Double>
+  <sys:Double x:Key="radius.fds-r-md">6</sys:Double>
+  <sys:Double x:Key="radius.fds-r-md2less">4</sys:Double>
+  <sys:Double x:Key="radius.fds-r-md2more">8</sys:Double>
+  <sys:Double x:Key="radius.fds-r-md4more">10</sys:Double>
+  <sys:Double x:Key="radius.fds-r-none">16</sys:Double>
+  <sys:Double x:Key="radius.fds-r-s">3</sys:Double>
+  <sys:Double x:Key="radius.fds-r-xl">12</sys:Double>
+  <sys:Double x:Key="radius.fds-r-xs">1</sys:Double>
+</ResourceDictionary>
