@@ -76,9 +76,9 @@
 
   <!-- SHADOW Tokens -->
   <Shadow x:Key="Effects.shadow-inset-1" Color="#00000012" Radius="2" Opacity="1" OffsetX="0" OffsetY="1"/>
-  <!-- This shadow token (Effects.shadow-inset-1) should be applied as an inset shadow to the main component -->
+  <!-- This shadow token (Effects.shadow-inset-1) should be applied to an outside border around the main component visually clipped to generate a shadow inset effect -->
   <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
-  <!-- This shadow token (Effects.shadow-inset-2) should be applied as an inset shadow to the main component -->
+  <!-- This shadow token (Effects.shadow-inset-1) should be applied to an outside border around the main component visually clipped to generate a shadow inset effect -->
 
   <Shadow x:Key="Effects.shadow-100-1" Color="#0000000a" Radius="4" Opacity="1" OffsetX="0" OffsetY="1"/>
   <!-- This shadow token (Effects.shadow-100-1) should be applied to a Frame around the main component -->
