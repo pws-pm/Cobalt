@@ -76,15 +76,14 @@
 
 
   <!-- SHADOW Tokens -->
-  <!-- Shadow helper frames or borders should always have the same corner radius of the main componet -->
+  <!-- Tokens with ending with a progressive index are part of a multi-shadow style and should always be used together -->
+  <!-- Helper frames or borders should always have the same corner radius of the main component plus their margin value (for example: Radius of main component 8px with margin "-2" should result in  6px radius for the helper frame ) -->
 
-  <!-- "Effects.shadow-inset": all tokens sharing this root should be applied together -->
   <Shadow x:Key="Effects.shadow-inset-1" Color="#00000012" Radius="2" Opacity="1" OffsetX="0" OffsetY="1"/>
   <!-- This shadow token (Effects.shadow-inset-1) should be applied to an outside border around the main component visually clipped to generate a shadow inset effect -->
   <Shadow x:Key="Effects.shadow-inset-2" Color="#ffffff40" Radius="1" Opacity="1" OffsetX="0" OffsetY="-0.5"/>
   <!-- This shadow token (Effects.shadow-inset-1) should be applied to an outside border around the main component visually clipped to generate a shadow inset effect -->
 
-  <!-- "Effects.shadow-100": all tokens sharing this root should be applied together -->
   <Shadow x:Key="Effects.shadow-100-1" Color="#0000000a" Radius="4" Opacity="1" OffsetX="0" OffsetY="1"/>
   <!-- This shadow token (Effects.shadow-100-1) should be applied to a Frame around the main component -->
   <!-- The Frame for Effects.shadow-100-1 should have a Margin="0,0,0,0" relative to the main component -->
