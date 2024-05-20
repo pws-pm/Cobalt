@@ -26,7 +26,7 @@
 
 export default function pluginMAUI(options = {}) {
   const { excludePatterns = [], outputDirectory = "./" } = options;
-  
+
   // Validate options structure
   if (!Array.isArray(excludePatterns) || typeof outputDirectory !== 'string') {
     throw new Error("Invalid options: 'excludePatterns' must be an array and 'outputDirectory' must be a string.");
@@ -143,7 +143,6 @@ function groupTokensByCollectionAndMode(tokens, mode, regexPatterns) {
     }, {});
 }
 
-
 function convertTokenToMAUI(token, mode = null) {
   let xaml = '';
   let value = mode && token.$extensions && token.$extensions.mode && token.$extensions.mode[mode]
@@ -152,10 +151,10 @@ function convertTokenToMAUI(token, mode = null) {
 
   switch (token.$type) {
       case 'color':
-          xaml = `  <Color x:Key="${token.id}">${value}</Color>\n`;
+          xaml = `  <Color x:Key="${token.id}">${convertColorFormat(value)}</Color>\n`;
           break;
       case 'dimension':
-          xaml = `  <sys:Double x:Key="${token.id}">${parseDimension(value)}</sys:Double>\n`;
+          xaml = `  <x:Double x:Key="${token.id}">${parseDimension(value)}</x:Double>\n`;
           break;
       case 'shadow':
           xaml = convertShadowToMAUI(token, value) + '\n';
@@ -172,10 +171,8 @@ function convertShadowToMAUI(token, value) {
   const shadowCount = value.length;
   let xamlOutput = [];
 
-  // Determine if the shadows are inset based on any shadow's inset property in the group
   const isInsetGroup = value.some(shadow => shadow.inset);
 
-  // General group comment with application and Z-index information, specific to shadow type
   if (isInsetGroup) {
     xamlOutput.push(`  <!-- Inset shadows for ${token.id}. All tokens in this group should be used together. Apply using clipped borders inside the main component. Ensure the Z-index is set higher so shadows are visible within the component content. -->`);
   } else {
@@ -186,17 +183,14 @@ function convertShadowToMAUI(token, value) {
     const key = shadowCount > 1 ? `${token.id}-${index + 1}` : token.id;
     const margin = parseFloat(shadow.spread.replace('px', ''));
 
-    // Shadow element with minimal key-specific instructions
-    xamlOutput.push(`  <Shadow x:Key="${key}" Color="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" OffsetX="${parseDimension(shadow.offsetX)}" OffsetY="${parseDimension(shadow.offsetY)}"/>`);
+    xamlOutput.push(`  <Shadow x:Key="${key}" Brush="${shadow.color}" Radius="${parseDimension(shadow.blur)}" Opacity="1" Offset="${parseDimension(shadow.offsetX)},${parseDimension(shadow.offsetY)}"/>`);
     if (!shadow.inset) {
-      // Only add margin details for drop shadows
       xamlOutput.push(`  <!-- Frame for drop shadow (Key: ${key}) should have a Margin="${margin},${margin},${margin},${margin}" relative to the main component. -->`);
     }
   });
 
   return xamlOutput.join("\n") + "\n";
 }
-
 
 function groupTokensByType(tokens) {
   return tokens.reduce((acc, token) => {
@@ -209,56 +203,60 @@ function groupTokensByType(tokens) {
   }, {});
 }
 
-function convertFontWeight(weight) {
-  // List of valid font weight names supported by MAUI
+function convertFontWeightToFontFamily(fontFamily, weight) {
   const validFontWeights = ["Thin", "ExtraLight", "Light", "Regular", "Medium", "SemiBold", "Bold", "ExtraBold", "Black"];
+  let weightName = '';
 
   if (typeof weight === 'string') {
-      // Normalize the input string
       let normalizedWeight = weight.replace(/\s/g, '').charAt(0).toUpperCase() + weight.replace(/\s/g, '').slice(1).toLowerCase();
-
-      // Check if the normalized font weight is valid
       if (validFontWeights.includes(normalizedWeight)) {
-          return normalizedWeight;
+          weightName = normalizedWeight;
       } else {
           console.log(`Unsupported fontWeight '${weight}', defaulting to 'Regular'.`);
-          return "Regular";
+          weightName = "Regular";
+      }
+  } else {
+      switch (weight) {
+          case 100: weightName = "Thin"; break;
+          case 200: weightName = "ExtraLight"; break;
+          case 300: weightName = "Light"; break;
+          case 400: weightName = "Regular"; break;
+          case 500: weightName = "Medium"; break;
+          case 600: weightName = "SemiBold"; break;
+          case 700: weightName = "Bold"; break;
+          case 800: weightName = "ExtraBold"; break;
+          case 900: weightName = "Black"; break;
+          default:
+              console.log(`Unexpected fontWeight value '${weight}', defaulting to 'Regular'.`);
+              weightName = "Regular";
       }
   }
 
-  // Map numeric fontWeight values to MAUI named equivalents
-  switch (weight) {
-      case 100: return "Thin";
-      case 200: return "ExtraLight";
-      case 300: return "Light";
-      case 400: return "Regular";
-      case 500: return "Medium";
-      case 600: return "SemiBold";
-      case 700: return "Bold";
-      case 800: return "ExtraBold";
-      case 900: return "Black";
-      default:
-          console.log(`Unexpected fontWeight value '${weight}', defaulting to 'Regular'.`);
-          return "Regular";  // Default or fallback to regular if unknown
-  }
+  return `${fontFamily}${weightName}`;
 }
 
-
 function convertTypographyToXAML(token, value) {
-  const fontSizePx = parseFloat(value.fontSize.replace('px', '')); // Extract numeric part from fontSize
+  const fontSizePx = parseFloat(value.fontSize.replace('px', ''));
 
   return `
 <Style x:Key="${token.id}" TargetType="Label">
-<Setter Property="FontFamily" Value="${value.fontFamily}" />
+<Setter Property="FontFamily" Value="${convertFontWeightToFontFamily(value.fontFamily, value.fontWeight)}" />
 <Setter Property="FontSize" Value="${parseDimension(value.fontSize)}" />
-<Setter Property="FontWeight" Value="${convertFontWeight(value.fontWeight)}" />
-<Setter Property="LineHeight" Value="${parseDimension(value.lineHeight)}" />
+<Setter Property="LineHeight" Value="${(parseFloat(value.lineHeight.replace('px', '')) / 16).toFixed(3)}" />
 <Setter Property="CharacterSpacing" Value="${parseLetterSpacing(value.letterSpacing, fontSizePx)}" />
-<Setter Property="TextDecorations" Value="${value.textDecoration === 'NONE' ? 'None' : value.textDecoration}" />
+<Setter Property="TextDecorations" Value="${value.textDecoration === 'NONE' ? 'None' : convertTextDecoration(value.textDecoration)}" />
 <Setter Property="TextTransform" Value="${convertTextCase(value.textCase)}" />
 </Style>\n`;
 }
 
+function convertColorFormat(value) {
+  // Check if the color is in #rrggbbaa format
+  if (/^#[0-9A-Fa-f]{8}$/.test(value)) {
+    // Rearrange the color format to #aarrggbb
+    return `#${value.slice(7, 9)}${value.slice(1, 7)}`;
+  }
+  return value;
+}
 
 function parseDimension(value) {
   if (typeof value !== 'string' || !value.endsWith('px')) {
@@ -268,33 +266,39 @@ function parseDimension(value) {
   return value.replace('px', '');
 }
 
-
 function parseLetterSpacing(letterSpacing, fontSize) {
   if (typeof letterSpacing === 'string') {
       if (letterSpacing.endsWith('%')) {
-          // Convert from percentage of the font size to em
           const percentage = parseFloat(letterSpacing) / 100;
           const letterSpacingEm = (percentage * fontSize);
-          return Math.round(letterSpacingEm / fontSize * 1000); // Convert to MAUI's unit
+          return Math.round(letterSpacingEm / fontSize * 1000);
       } else if (letterSpacing.endsWith('px')) {
-          // Direct conversion from pixels to em
           const letterSpacingPx = parseFloat(letterSpacing);
-          return Math.round(letterSpacingPx / fontSize * 1000); // Convert to MAUI's unit
+          return Math.round(letterSpacingPx / fontSize * 1000);
       }
   }
   console.error(`Invalid letterSpacing value: ${letterSpacing}. Expected a string with 'px' or '%'.`);
-  return 0; // Default value if parsing fails
+  return 0;
 }
 
-
-
 function convertTextCase(textCase) {
-  switch(textCase.toUpperCase()) { // Ensure the case is not sensitive
+  switch(textCase.toUpperCase()) {
       case 'UPPERCASE': return 'Upper';
       case 'LOWERCASE': return 'Lower';
       case 'CAPITALIZE': return 'Capitalize';
       default:
           console.log(`Unexpected text case value '${textCase}', defaulting to 'None'.`);
-          return 'None'; // Default if no known case is matched
+          return 'None';
+  }
+}
+
+function convertTextDecoration(textDecoration) {
+  switch(textDecoration.toUpperCase()) {
+      case 'UNDERLINE': return 'Underline';
+      case 'LINE-THROUGH': return 'Strikethrough';
+      case 'OVERLINE': return 'Overline';
+      default:
+          console.log(`Unexpected text decoration value '${textDecoration}', defaulting to 'None'.`);
+          return 'None';
   }
 }
